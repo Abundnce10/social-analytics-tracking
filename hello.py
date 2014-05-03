@@ -26,12 +26,12 @@ def api_pinterest():
         url = request.args['url']
         pins = pinterest.getPins(url)
         if type(pins) == int:
-            obj = { 'timestamp': get_time(),
+            pin_dict = { 'timestamp': get_time(),
                     'pin_count': pins,
                     'url': url,
                     'cached': False }
 
-            return jsonify(obj)
+            return jsonify(pin_dict)
         else:
             #return error
             return jsonify({ 'error': pins})
@@ -40,9 +40,20 @@ def api_pinterest():
 
 @app.route('/api/v1/facebook')
 def api_facebook():
-    x = facebook.getObject('http://allrecipes.com/Recipe/Sams-Famous-Carrot-Cake/Detail.aspx')
-    return jsonify(x)
+    if 'url' in request.args:
+        url = request.args['url']
+        fb_dict = facebook.getObject(url)
+        if 'error' not in fb_dict:
+            fb_dict['timestamp'] = get_time()
+            fb_dict['url'] = url
+            fb_dict['cached'] = False
 
+            return jsonify(fb_dict)
+        else:
+            #return error
+            return jsonify({ 'error': fb_dict})
+    else:
+        return jsonify({ 'error': 'No URL parameter'})
 
 
 
