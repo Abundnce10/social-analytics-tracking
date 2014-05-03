@@ -4,4 +4,4 @@ itsdangerous==0.24
 requests==2.2.1
 socialanalytics==0.2.1
 pytz==2014.2
-
+werkzeug==0.9.4

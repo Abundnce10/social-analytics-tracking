@@ -3,22 +3,23 @@ from socialanalytics import pinterest, facebook
 import json
 import pytz
 import datetime
-from flask import Flask, url_for, request, jsonify
+from flask import Flask, url_for, request, jsonify, render_template
+from werkzeug import SharedDataMiddleware
 
 
 app = Flask(__name__)
 
 
-#### Functions ####
-def get_time():
-    timestamp = datetime.datetime.now(pytz.utc).strftime('%Y-%m-%d %H:%M:%S')
-    return timestamp
-
-
 #### Routes ####
+@app.route('/')
+def root():
+    return render_template("index.html")
+
+"""
 @app.route('/')
 def api_root():
     return 'Welcome to SocialAnalytics'
+"""
 
 
 @app.route('/api/v1/pinterest')
@@ -56,6 +57,17 @@ def api_facebook():
             return jsonify(fb_dict)
     else:
         return jsonify({ 'error': 'No URL parameter'})
+
+
+
+
+
+
+
+#### Functions ####
+def get_time():
+    timestamp = datetime.datetime.now(pytz.utc).strftime('%Y-%m-%d %H:%M:%S')
+    return timestamp
 
 
 
@@ -111,8 +123,14 @@ def api_time():
 
 
 
-if __name__ == '__main__':
-    app.run(debug=True)
+
+if __name__ == "__main__":
+    if app.debug:
+       app.wsgi_app = SharedDataMiddleware(app.wsgi_app, {
+            '/static': static_folder
+        })
+    app.run(debug=True, use_debugger=True, use_reloader=True)
+
 
 
 
