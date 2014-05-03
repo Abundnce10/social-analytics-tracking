@@ -1,21 +1,46 @@
 import requests
+from socialanalytics import pinterest, facebook
 import json
+import pytz
+import datetime
 from flask import Flask, url_for, request, jsonify
 
 
 app = Flask(__name__)
 
 
+def get_time():
+    timestamp = datetime.datetime.now(pytz.utc).strftime('%Y-%m-%d %H:%M:%S')
+    return timestamp
+
+
+
 @app.route('/')
 def api_root():
     return 'Welcome to SocialAnalytics'
 
-@app.route('/API/v1/pinterest')
+
+@app.route('/api/v1/pinterest')
 def api_pinterest():
     if 'url' in request.args:
-        return 'URL ' + request.args['url']
+        url = request.args['url']
+        pins = pinterest.getPins('http://allrecipes.com/Recipe/Sams-Famous-Carrot-Cake/Detail.aspx')
+        obj = { 'timestamp': get_time(),
+                'pin_count': pins,
+                'url': url,
+                'cached': False
+        }
+
+        return jsonify(obj)
     else:
         return 'No URL parameter'
+
+
+@app.route('/api/v1/facebook')
+def api_facebook():
+    x = facebook.getObject('http://allrecipes.com/Recipe/Sams-Famous-Carrot-Cake/Detail.aspx')
+    return jsonify(x)
+
 
 
 
@@ -59,14 +84,15 @@ def api_names():
     return jsonify({ 'name': 'Jordan' })
 
 
-
 @app.route('/json')
 def api_json():
     r = requests.get('http://www.json-generator.com/j/bRwOgfpgya?indent=4')
     return json.dumps(r.json())
 
 
-
+@app.route('/time')
+def api_time():
+    return jsonify({ 'timestamp': get_time() })
 
 
 

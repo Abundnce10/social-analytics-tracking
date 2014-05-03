@@ -3,3 +3,5 @@ gunicorn==18.0
 itsdangerous==0.24
 requests=2.2.1
 socialanalytics=0.2.1
+pytz=2014.2
+
