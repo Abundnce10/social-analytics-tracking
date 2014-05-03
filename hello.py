@@ -20,6 +20,7 @@ def get_time():
 def api_root():
     return 'Welcome to SocialAnalytics'
 
+
 @app.route('/api/v1/pinterest')
 def api_pinterest():
     if 'url' in request.args:
@@ -38,6 +39,7 @@ def api_pinterest():
     else:
         return jsonify({ 'error': 'No URL parameter'})
 
+
 @app.route('/api/v1/facebook')
 def api_facebook():
     if 'url' in request.args:
@@ -51,7 +53,7 @@ def api_facebook():
             return jsonify(fb_dict)
         else:
             #return error
-            return jsonify({ 'error': fb_dict})
+            return jsonify(fb_dict)
     else:
         return jsonify({ 'error': 'No URL parameter'})
 
