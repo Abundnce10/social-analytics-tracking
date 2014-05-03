@@ -1,7 +1,7 @@
 Flask==0.10.1
 gunicorn==18.0
 itsdangerous==0.24
-requests=2.2.1
+requests=2.2.0
 socialanalytics=0.2.1
 pytz=2014.2
 
