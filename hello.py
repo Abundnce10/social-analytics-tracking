@@ -9,32 +9,34 @@ from flask import Flask, url_for, request, jsonify
 app = Flask(__name__)
 
 
+#### Functions ####
 def get_time():
     timestamp = datetime.datetime.now(pytz.utc).strftime('%Y-%m-%d %H:%M:%S')
     return timestamp
 
 
-
+#### Routes ####
 @app.route('/')
 def api_root():
     return 'Welcome to SocialAnalytics'
-
 
 @app.route('/api/v1/pinterest')
 def api_pinterest():
     if 'url' in request.args:
         url = request.args['url']
-        pins = pinterest.getPins('http://allrecipes.com/Recipe/Sams-Famous-Carrot-Cake/Detail.aspx')
-        obj = { 'timestamp': get_time(),
-                'pin_count': pins,
-                'url': url,
-                'cached': False
-        }
+        pins = pinterest.getPins(url)
+        if type(pins) == int:
+            obj = { 'timestamp': get_time(),
+                    'pin_count': pins,
+                    'url': url,
+                    'cached': False }
 
-        return jsonify(obj)
+            return jsonify(obj)
+        else:
+            #return error
+            return jsonify({ 'error': pins})
     else:
-        return 'No URL parameter'
-
+        return jsonify({ 'error': 'No URL parameter'})
 
 @app.route('/api/v1/facebook')
 def api_facebook():
