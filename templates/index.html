@@ -18,9 +18,11 @@
 
 	<nav class="navbar navbar-inverse navbar-fixed-top" id="nav" role="navigation">
     <div class="container">
-      <div class="navbar-header pull-right">
-        <a class="navbar-brand" href="#">Sign In</a>         
-      </div>
+      
+        <ul class="nav navbar-nav navbar-right">
+        	<li><a href="#">Sign In</a></li> 
+        </ul>      
+      
     </div>
   </nav>
 	  
@@ -29,19 +31,83 @@
 
     <div class="row">
      
-      <div class="col-lg-12 text-center v-center">
+      <div class="col-lg-12 v-center">
         
-        <h1>Social Analytics</h1>
-        <p class="lead">Track interactions on various networks.</p>
+        <div class="text-center header-container">
+	        <h1>Social Analytics</h1>
+	        <p class="lead">Track a page's interactions on various social networks.</p>
+	      </div> 
         
-        <br><br><br>
-        
-        <form class="col-lg-12">
-          <div class="input-group" style="width:340px;text-align:center;margin:0 auto;">
-          <input class="form-control input-lg" title="Don't worry. We hate spam, and will not share your email with anyone." placeholder="Enter a webpage's URL" type="text">
-            <span class="input-group-btn"><button class="btn btn-lg btn-success" type="button">GO</button></span>
-          </div>
-        </form>
+        <!-- Pinterest -->
+        <div class="col-lg-4 col-lg-offset-4 col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2 col-xs-12 searchbox-container">
+	        <form>
+	          <div class="input-group">
+	          	
+			        <span class="input-group-addon">
+				        <i class="fa fa-pinterest" style="font-size:30px;min-width:27px;text-align:center;"></i>
+				      </span>
+
+	          	<input class="form-control input-lg" placeholder="Retreive # of Pinterest Pins." type="text">
+
+	            <span class="input-group-btn">
+	            	<button class="btn btn-lg btn-success" type="button">GO</button>
+	            </span>
+
+	          </div>
+	        </form>
+
+	        <div>
+	        	<!-- Display Output -->
+	        </div>
+	      </div>
+
+        <!-- Facebook -->
+        <div class="col-lg-4 col-lg-offset-4 col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2 col-xs-12 searchbox-container">
+	        <form>
+	          <div class="input-group">
+	          	
+			        <span class="input-group-addon">
+				        <i class="fa fa-facebook" style="font-size:30px;min-width:27px;text-align:center;"></i>
+				      </span>
+
+	          	<input class="form-control input-lg" placeholder="Grab Facebook statistics." type="text">
+
+	            <span class="input-group-btn">
+	            	<button class="btn btn-lg btn-success" type="button">GO</button>
+	            </span>
+
+	          </div>
+	        </form>
+
+	        <div>
+	        	<!-- Display Output -->
+	        </div>
+	      </div><!-- /Facebook -->
+
+	      <!-- Twitter -->
+        <div class="col-lg-4 col-lg-offset-4 col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2 col-xs-12 searchbox-container">
+	        <form>
+	          <div class="input-group">
+	          	
+			        <span class="input-group-addon">
+				        <i class="fa fa-twitter" style="font-size:30px;min-width:27px;text-align:center;"></i>
+				      </span>
+
+	          	<input class="form-control input-lg" placeholder="Twitter metrics coming soon..." type="text">
+
+	            <!--<span class="input-group-btn">
+	            	<button class="btn btn-lg btn-success" type="button">GO</button>
+	            </span>-->
+
+	          </div>
+	        </form>
+
+	        <div>
+	        	<!-- Display Output -->
+	        </div>
+	      </div><!-- /Twitter -->
+
+
       </div>
       
     </div> <!-- /row -->
@@ -49,16 +115,17 @@
 	  <div class="row">
      
       <div class="col-lg-12 text-center v-center" style="font-size:39pt;">
-        <a href="#"><i class="fa fa-google-plus"></i></a> 
+        <a href="#"><i class="fa fa-github"></i></a> 
+
+        <!--<a href="#"><i class="fa fa-google-plus"></i></a> 
         <a href="#"><i class="fa fa-facebook"></i></a>  
         <a href="#"><i class="fa fa-twitter"></i></a> 
-        <a href="#"><i class="fa fa-github"></i></a> 
-        <a href="#"><i class="fa fa-pinterest"></i></a>
+        <a href="#"><i class="fa fa-pinterest"></i></a>-->
       </div>
     
     </div>
 
-	<br><br><br><br><br>
+	<!--<br><br><br><br><br>-->
 
 	</div> <!-- /container full -->
 
