@@ -4,4 +4,10 @@ body {
 
 #content-wrapper {
 	background-color: #EEEEEE;
+	min-height: 90%;
+}
+
+.navbar-inverse .navbar-nav > li > a.call-out {
+	font-weight: bold;
+	color: #33CC33;
 }
