@@ -1,5 +1,5 @@
 import requests
-from socialanalytics import pinterest, facebook
+from socialanalytics import pinterest, facebook, twitter, google_plus
 import json
 import pytz
 from datetime import timedelta, datetime
@@ -70,17 +70,16 @@ def api_root():
 def api_pinterest():
     if 'url' in request.args:
         url = request.args['url']
-        pins = pinterest.getPins(url)
-        if type(pins) == int:
-            pin_dict = { 'timestamp': get_time(),
-                    'pin_count': pins,
-                    'url': url,
-                    'cached': False }
+        pins_dict = pinterest.getPins(url)
+        if 'error' not in pins_dict:
+            pins_dict['timestamp'] = get_time()
+            pins_dict['url'] = url
+            pins_dict['cached'] = False
 
-            return jsonify(pin_dict)
+            return jsonify(pins_dict)
         else:
             #return error
-            return jsonify({ 'error': pins})
+            return jsonify({ 'error': pins_dict['error'] })
     else:
         return jsonify({ 'error': 'No URL parameter'})
 
@@ -99,12 +98,47 @@ def api_facebook():
             return jsonify(fb_dict)
         else:
             #return error
-            return jsonify(fb_dict)
+            return jsonify({ 'error': fb_dict['error'] })
     else:
         return jsonify({ 'error': 'No URL parameter'})
 
 
+@app.route('/api/v1/twitter')
+@crossdomain(origin='*')
+def api_twitter():
+    if 'url' in request.args:
+        url = request.args['url']
+        shares_dict = twitter.getShares(url)
+        if 'error' not in shares_dict:
+            shares_dict['timestamp'] = get_time()
+            shares_dict['url'] = url
+            shares_dict['cached'] = False
 
+            return jsonify(shares_dict)
+        else:
+            #return error
+            return jsonify({ 'error': shares_dict['error'] })
+    else:
+        return jsonify({ 'error': 'No URL parameter'})
+
+
+@app.route('/api/v1/google-plus')
+@crossdomain(origin='*')
+def api_google_plus():
+    if 'url' in request.args:
+        url = request.args['url']
+        plus_ones_dict = google_plus.getPlusOnes(url)
+        if 'error' not in plus_ones_dict:
+            plus_ones_dict['timestamp'] = get_time()
+            plus_ones_dict['url'] = url
+            plus_ones_dict['cached'] = False
+
+            return jsonify(plus_ones_dict)
+        else:
+            #return error
+            return jsonify({ 'error': plus_ones_dict['error'] })
+    else:
+        return jsonify({ 'error': 'No URL parameter'})
 
 
 
