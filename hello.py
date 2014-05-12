@@ -6,9 +6,15 @@ from datetime import timedelta, datetime
 from flask import Flask, url_for, request, jsonify, render_template, make_response, current_app 
 from werkzeug import SharedDataMiddleware
 from functools import update_wrapper
+from urlparse import urlparse
+import psycopg2
 
 
 app = Flask(__name__)
+
+conn = psycopg2.connect(database='mas', user='tester', password='test_password', host='127.0.0.1', port='5432')
+print "Opened database successfully"
+cur = conn.cursor()
 
 
 ### Cross Domains ###
@@ -54,33 +60,65 @@ def crossdomain(origin=None, methods=None, headers=None, max_age=21600, attach_t
 
 
 #### Routes ####
+"""
 @app.route('/')
 def root():
     return render_template("index.html")
-
 """
+
 @app.route('/')
 def api_root():
     return 'Welcome to SocialAnalytics'
-"""
+
 
 
 @app.route('/api/v1/pinterest')
 @crossdomain(origin='*')
 def api_pinterest():
     if 'url' in request.args:
-        url = request.args['url']
+        url = lower(request.args['url'])
+        parsed_url = urlparse(url)
+        print parsed_url.netloc
+
+
+        # Check if domain is over limit
+        #cur.execute("SELECT * FROM pinterest WHERE domain = %s ORDER BY request_time DESC;", (parsed_url.netloc, ))
+
+
+        # Check if page was searched in the past 24 hours
+        cur.execute("SELECT * FROM pinterest WHERE url = %s ORDER BY request_time DESC;", (url, ))
+        row = cur.fetchone()
+        if row is not None:
+            time_diff = datetime.now() - row[1]
+            if time_diff.seconds < (60 * 60 * 24):
+                pins_dict = {
+                    'cached': True,
+                    'pin_count': row[4],
+                    'request_time': convert_time(row[1]),
+                    'url': url
+                }
+                return jsonify(pins_dict)
+
+
+        # Hit Pinterest API
         pins_dict = pinterest.getPins(url)
         if 'error' not in pins_dict:
-            pins_dict['timestamp'] = get_time()
+            pins_dict['request_time'] = convert_time(datetime.now())
             pins_dict['url'] = url
             pins_dict['cached'] = False
 
+            # Save result to database
+            cur.execute("INSERT INTO pinterest (ID, request_time, url, domain, pin_count) VALUES (DEFAULT, %s , %s, %s, %s);", (datetime.now(), url, parsed_url.netloc, pins_dict['pin_count']))
+            conn.commit()
+            print 'Record created'
+
+            # Return JSON
             return jsonify(pins_dict)
         else:
-            #return error
+            #Return Error Message
             return jsonify({ 'error': pins_dict['error'] })
     else:
+        # Return Error
         return jsonify({ 'error': 'No URL parameter'})
 
 
@@ -145,9 +183,12 @@ def api_google_plus():
 
 #### Functions ####
 def get_time():
-    timestamp = datetime.now(pytz.utc).strftime('%Y-%m-%d %H:%M:%S')
+    #timestamp = datetime.now(pytz.utc).strftime('%Y-%m-%d %H:%M:%S')
+    timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
     return timestamp
 
+def convert_time(d):
+    return d.strftime('%Y-%m-%d %H:%M:%S')
 
 
 
