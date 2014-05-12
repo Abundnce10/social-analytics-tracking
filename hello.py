@@ -80,8 +80,8 @@ def api_pinterest():
     print "Accepted Pinterest request"
     if 'url' in request.args:
         url = lower(request.args['url'])
-        parsed_url = urlparse(url)
-        print parsed_url.netloc
+        #parsed_url = urlparse(url)
+        #print parsed_url.netloc
 
 
         # Check if domain is over limit
@@ -89,6 +89,7 @@ def api_pinterest():
 
 
         # Check if page was searched in the past 24 hours
+        """
         print "Checking for page in db"
         cur.execute("SELECT * FROM pinterest WHERE url = %s ORDER BY request_time DESC;", (url, ))
         row = cur.fetchone()
@@ -103,20 +104,23 @@ def api_pinterest():
                 }
                 print "returning cached value"
                 return jsonify(pins_dict)
+        """
 
 
         # Hit Pinterest API
         pins_dict = pinterest.getPins(url)
         if 'error' not in pins_dict:
-            print "Saving doc"
+            #print "Saving doc"
             pins_dict['request_time'] = convert_time(datetime.now())
             pins_dict['url'] = url
             pins_dict['cached'] = False
 
             # Save result to database
+            """
             cur.execute("INSERT INTO pinterest (ID, request_time, url, domain, pin_count) VALUES (DEFAULT, %s , %s, %s, %s);", (datetime.now(), url, parsed_url.netloc, pins_dict['pin_count']))
             conn.commit()
             print 'Record created'
+            """
 
             # Return JSON
             return jsonify(pins_dict)
