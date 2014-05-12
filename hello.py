@@ -1,3 +1,4 @@
+import os
 import requests
 from socialanalytics import pinterest, facebook, twitter, google_plus
 import json
@@ -12,7 +13,8 @@ import psycopg2
 
 app = Flask(__name__)
 
-conn = psycopg2.connect(database='mas', user='tester', password='test_password', host='127.0.0.1', port='5432')
+conn = psycopg2.connect(os.environ["DATABASE_URL"])
+#conn = psycopg2.connect(database='mas', user='tester', password='test_password', host='127.0.0.1', port='5432')
 print "Opened database successfully"
 cur = conn.cursor()
 
