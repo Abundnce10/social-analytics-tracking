@@ -77,6 +77,7 @@ def api_root():
 @app.route('/api/v1/pinterest')
 @crossdomain(origin='*')
 def api_pinterest():
+    print "Accepted Pinterest request"
     if 'url' in request.args:
         url = lower(request.args['url'])
         parsed_url = urlparse(url)
@@ -88,6 +89,7 @@ def api_pinterest():
 
 
         # Check if page was searched in the past 24 hours
+        print "Checking for page in db"
         cur.execute("SELECT * FROM pinterest WHERE url = %s ORDER BY request_time DESC;", (url, ))
         row = cur.fetchone()
         if row is not None:
@@ -99,12 +101,14 @@ def api_pinterest():
                     'request_time': convert_time(row[1]),
                     'url': url
                 }
+                print "returning cached value"
                 return jsonify(pins_dict)
 
 
         # Hit Pinterest API
         pins_dict = pinterest.getPins(url)
         if 'error' not in pins_dict:
+            print "Saving doc"
             pins_dict['request_time'] = convert_time(datetime.now())
             pins_dict['url'] = url
             pins_dict['cached'] = False
