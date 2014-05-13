@@ -108,7 +108,6 @@ def api_pinterest():
         # Hit Pinterest API
         pins_dict = pinterest.getPins(url)
         if 'error' not in pins_dict:
-            #print "Saving doc"
             pins_dict['request_time'] = convert_time(datetime.now())
             pins_dict['url'] = url
             pins_dict['cached'] = False
@@ -118,7 +117,6 @@ def api_pinterest():
             conn.commit()
             print 'Record created'
             
-
             # Return JSON
             return jsonify(pins_dict)
         else:
@@ -129,16 +127,49 @@ def api_pinterest():
         return jsonify({ 'error': 'No URL parameter'})
 
 
+
+
 @app.route('/api/v1/facebook')
 @crossdomain(origin='*')
 def api_facebook():
     if 'url' in request.args:
-        url = request.args['url']
+        url = request.args['url'].lower()
+        parsed_url = urlparse(url)
+
+
+        # Check if domain is over limit
+
+
+        # Check if page was searched in the past 24 hours
+        cur.execute("SELECT * FROM facebook WHERE url = %s ORDER BY request_time DESC;", (url, ))
+        row = cur.fetchone()
+        if row is not None:
+            time_diff = datetime.now() - row[1]
+            if time_diff.seconds < (60 * 60 * 24):
+                fb_dict = {
+                    'cached': True,
+                    'share_count': row[4],
+                    'comment_count': row[5],
+                    'like_count': row[6],
+                    'request_time': convert_time(row[1]),
+                    'url': url
+                }
+                print "returning cached value"
+                return jsonify(fb_dict)
+
+
+
+        # Hit Facebook API
         fb_dict = facebook.getObject(url)
         if 'error' not in fb_dict:
-            fb_dict['timestamp'] = get_time()
+            fb_dict['timestamp'] = convert_time(datetime.now())
             fb_dict['url'] = url
             fb_dict['cached'] = False
+
+            # Save result to database
+            cur.execute("INSERT INTO facebook (ID, request_time, url, domain, share_count, comment_count, like_count) VALUES (DEFAULT, %s , %s, %s, %s, %s, %s);", (datetime.now(), url, parsed_url.netloc, fb_dict['share_count'], fb_dict['comment_count'], fb_dict['like_count']))
+            conn.commit()
+            print 'Record created'
 
             return jsonify(fb_dict)
         else:
@@ -148,16 +179,47 @@ def api_facebook():
         return jsonify({ 'error': 'No URL parameter'})
 
 
+
+
+
 @app.route('/api/v1/twitter')
 @crossdomain(origin='*')
 def api_twitter():
     if 'url' in request.args:
-        url = request.args['url']
+        url = request.args['url'].lower()
+        parsed_url = urlparse(url)
+
+
+        # Check if domain is over limit
+
+
+        # Check if page was searched in the past 24 hours
+        cur.execute("SELECT * FROM twitter WHERE url = %s ORDER BY request_time DESC;", (url, ))
+        row = cur.fetchone()
+        if row is not None:
+            time_diff = datetime.now() - row[1]
+            if time_diff.seconds < (60 * 60 * 24):
+                shares_dict = {
+                    'cached': True,
+                    'share_count': row[4],
+                    'request_time': convert_time(row[1]),
+                    'url': url
+                }
+                print "returning cached value"
+                return jsonify(shares_dict)
+
+
+        # Hit Twitter API
         shares_dict = twitter.getShares(url)
         if 'error' not in shares_dict:
-            shares_dict['timestamp'] = get_time()
+            shares_dict['timestamp'] = convert_time(datetime.now())
             shares_dict['url'] = url
             shares_dict['cached'] = False
+
+            # Save result to database
+            cur.execute("INSERT INTO twitter (ID, request_time, url, domain, share_count) VALUES (DEFAULT, %s , %s, %s, %s);", (datetime.now(), url, parsed_url.netloc, shares_dict['share_count']))
+            conn.commit()
+            print 'Record created'
 
             return jsonify(shares_dict)
         else:
@@ -167,16 +229,45 @@ def api_twitter():
         return jsonify({ 'error': 'No URL parameter'})
 
 
+
 @app.route('/api/v1/google-plus')
 @crossdomain(origin='*')
 def api_google_plus():
     if 'url' in request.args:
-        url = request.args['url']
+        url = request.args['url'].lower()
+        parsed_url = urlparse(url)
+
+
+        # Check if domain is over limit
+
+
+        # Check if page was searched in the past 24 hours
+        cur.execute("SELECT * FROM google WHERE url = %s ORDER BY request_time DESC;", (url, ))
+        row = cur.fetchone()
+        if row is not None:
+            time_diff = datetime.now() - row[1]
+            if time_diff.seconds < (60 * 60 * 24):
+                plus_ones_dict = {
+                    'cached': True,
+                    'plus_count': row[4],
+                    'request_time': convert_time(row[1]),
+                    'url': url
+                }
+                print "returning cached value"
+                return jsonify(plus_ones_dict)
+
+
+        # Hit Google+ API
         plus_ones_dict = google_plus.getPlusOnes(url)
         if 'error' not in plus_ones_dict:
-            plus_ones_dict['timestamp'] = get_time()
+            plus_ones_dict['timestamp'] = convert_time(datetime.now())
             plus_ones_dict['url'] = url
             plus_ones_dict['cached'] = False
+
+            # Save result to database
+            cur.execute("INSERT INTO google (ID, request_time, url, domain, share_count) VALUES (DEFAULT, %s , %s, %s, %s);", (datetime.now(), url, parsed_url.netloc, plus_ones_dict['plus_count']))
+            conn.commit()
+            print 'Record created'
 
             return jsonify(plus_ones_dict)
         else:
