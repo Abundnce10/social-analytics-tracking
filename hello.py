@@ -76,11 +76,10 @@ def api_root():
 @app.route('/api/v1/pinterest')
 @crossdomain(origin='*')
 def api_pinterest():
-    print "Accepted Pinterest request"
     if 'url' in request.args:
-        url = request.args['url'].lower()
+        url = request.args['url']
         parsed_url = urlparse(url)
-        print parsed_url.netloc
+        url = remove_params(url).lower()
 
 
         # Check if domain is over limit
@@ -88,7 +87,6 @@ def api_pinterest():
 
 
         # Check if page was searched in the past 24 hours
-        print "Checking for page in db"
         cur.execute("SELECT * FROM pinterest WHERE url = %s ORDER BY request_time DESC;", (url, ))
         row = cur.fetchone()
         if row is not None:
@@ -100,7 +98,7 @@ def api_pinterest():
                     'request_time': convert_time(row[1]),
                     'url': url
                 }
-                print "returning cached value"
+                
                 return jsonify(pins_dict)
         
 
@@ -133,8 +131,9 @@ def api_pinterest():
 @crossdomain(origin='*')
 def api_facebook():
     if 'url' in request.args:
-        url = request.args['url'].lower()
+        url = request.args['url']
         parsed_url = urlparse(url)
+        url = remove_params(url).lower()
 
 
         # Check if domain is over limit
@@ -186,8 +185,9 @@ def api_facebook():
 @crossdomain(origin='*')
 def api_twitter():
     if 'url' in request.args:
-        url = request.args['url'].lower()
+        url = request.args['url']
         parsed_url = urlparse(url)
+        url = remove_params(url).lower()
 
 
         # Check if domain is over limit
@@ -234,8 +234,9 @@ def api_twitter():
 @crossdomain(origin='*')
 def api_google_plus():
     if 'url' in request.args:
-        url = request.args['url'].lower()
+        url = request.args['url']
         parsed_url = urlparse(url)
+        url = remove_params(url).lower()
 
 
         # Check if domain is over limit
@@ -280,13 +281,21 @@ def api_google_plus():
 
 
 #### Functions ####
-def get_time():
-    #timestamp = datetime.now(pytz.utc).strftime('%Y-%m-%d %H:%M:%S')
-    timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-    return timestamp
-
 def convert_time(d):
     return d.strftime('%Y-%m-%d %H:%M:%S')
+
+def remove_params(url):
+    if url.find("?") >= 0:
+        stop = url.find("?")
+        return url[:stop]
+    else:
+        return url
+
+
+
+
+
+
 
 
 
