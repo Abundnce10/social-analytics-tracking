@@ -88,12 +88,14 @@ def api_pinterest():
 
         # Check if page was searched in the past 24 hours
         cur.execute("SELECT * FROM pinterest WHERE url = %s ORDER BY request_time DESC;", (url, ))
-        row = cur.fetchone()
-        if row is not None:
+        rowcount = cur.rowcount
+        if rowcount > 0:
+            row = cur.fetchone()
             time_diff = datetime.now() - row[1]
             if time_diff.seconds < (60 * 60 * 24):
                 pins_dict = {
                     'cached': True,
+                    'row_count': rowcount,
                     'pin_count': row[4],
                     'request_time': convert_time(row[1]),
                     'url': url
@@ -141,12 +143,14 @@ def api_facebook():
 
         # Check if page was searched in the past 24 hours
         cur.execute("SELECT * FROM facebook WHERE url = %s ORDER BY request_time DESC;", (url, ))
-        row = cur.fetchone()
-        if row is not None:
+        rowcount = cur.rowcount
+        if rowcount > 0:
+            row = cur.fetchone()
             time_diff = datetime.now() - row[1]
             if time_diff.seconds < (60 * 60 * 24):
                 fb_dict = {
                     'cached': True,
+                    'row_count': rowcount,
                     'share_count': row[4],
                     'comment_count': row[5],
                     'like_count': row[6],
@@ -195,12 +199,14 @@ def api_twitter():
 
         # Check if page was searched in the past 24 hours
         cur.execute("SELECT * FROM twitter WHERE url = %s ORDER BY request_time DESC;", (url, ))
-        row = cur.fetchone()
-        if row is not None:
+        rowcount = cur.rowcount
+        if rowcount > 0:
+            row = cur.fetchone()
             time_diff = datetime.now() - row[1]
             if time_diff.seconds < (60 * 60 * 24):
                 shares_dict = {
                     'cached': True,
+                    'row_count': rowcount,
                     'share_count': row[4],
                     'request_time': convert_time(row[1]),
                     'url': url
@@ -244,12 +250,14 @@ def api_google_plus():
 
         # Check if page was searched in the past 24 hours
         cur.execute("SELECT * FROM google WHERE url = %s ORDER BY request_time DESC;", (url, ))
-        row = cur.fetchone()
-        if row is not None:
+        rowcount = cur.rowcount
+        if rowcount > 0:
+            row = cur.fetchone()
             time_diff = datetime.now() - row[1]
             if time_diff.seconds < (60 * 60 * 24):
                 plus_ones_dict = {
                     'cached': True,
+                    'row_count': rowcount,
                     'plus_count': row[4],
                     'request_time': convert_time(row[1]),
                     'url': url
