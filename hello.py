@@ -120,8 +120,11 @@ def api_pinterest():
             # Return JSON
             return jsonify(pins_dict)
         else:
-            #Return Error Message
-            return jsonify({ 'error': pins_dict['error'] })
+            try:
+                #Return Error Message
+                return jsonify({ 'error': pins_dict['error'] })
+            except:
+                return jsonify({ 'error': 'Trouble connecting to API. Please try again.' })
     else:
         # Return Error
         return jsonify({ 'error': 'No URL parameter'})
@@ -176,8 +179,11 @@ def api_facebook():
 
             return jsonify(fb_dict)
         else:
-            #return error
-            return jsonify({ 'error': fb_dict['error'] })
+            try:
+                #return error
+                return jsonify({ 'error': fb_dict['error'] })
+            except:
+                return jsonify({ 'error': 'Trouble connecting to API. Please try again.' })
     else:
         return jsonify({ 'error': 'No URL parameter'})
 
@@ -229,8 +235,11 @@ def api_twitter():
 
             return jsonify(shares_dict)
         else:
-            #return error
-            return jsonify({ 'error': shares_dict['error'] })
+            try:
+                #return error
+                return jsonify({ 'error': shares_dict['error'] })
+            except:
+                return jsonify({ 'error': 'Trouble connecting to API. Please try again.' })
     else:
         return jsonify({ 'error': 'No URL parameter'})
 
@@ -280,8 +289,11 @@ def api_google_plus():
 
             return jsonify(plus_ones_dict)
         else:
-            #return error
-            return jsonify({ 'error': plus_ones_dict['error'] })
+            try:
+                #return error
+                return jsonify({ 'error': plus_ones_dict['error'] })
+            except:
+                return jsonify({ 'error': 'Trouble connecting to API. Please try again.' })
     else:
         return jsonify({ 'error': 'No URL parameter'})
 
