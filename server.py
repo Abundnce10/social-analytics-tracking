@@ -92,7 +92,8 @@ def api_pinterest():
         if rowcount > 0:
             row = cur.fetchone()
             time_diff = datetime.now() - row[1]
-            if time_diff.seconds < (60 * 60 * 24):
+            # Return cached value if requested in previous 24 hours
+            if time_diff.days < 1:
                 pins_dict = {
                     'cached': True,
                     'row_count': rowcount,
@@ -150,7 +151,8 @@ def api_facebook():
         if rowcount > 0:
             row = cur.fetchone()
             time_diff = datetime.now() - row[1]
-            if time_diff.seconds < (60 * 60 * 24):
+            # Return cached value if requested in previous 24 hours
+            if time_diff.days < 1:
                 fb_dict = {
                     'cached': True,
                     'row_count': rowcount,
@@ -209,7 +211,8 @@ def api_twitter():
         if rowcount > 0:
             row = cur.fetchone()
             time_diff = datetime.now() - row[1]
-            if time_diff.seconds < (60 * 60 * 24):
+            # Return cached value if requested in previous 24 hours
+            if time_diff.days < 1:
                 shares_dict = {
                     'cached': True,
                     'row_count': rowcount,
@@ -263,7 +266,8 @@ def api_google_plus():
         if rowcount > 0:
             row = cur.fetchone()
             time_diff = datetime.now() - row[1]
-            if time_diff.seconds < (60 * 60 * 24):
+            # Return cached value if requested in previous 24 hours
+            if time_diff.days < 1:
                 plus_ones_dict = {
                     'cached': True,
                     'row_count': rowcount,
