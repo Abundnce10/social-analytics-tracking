@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <link data-require="bootstrap-css@3.1.1" data-semver="3.1.1" rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" />
+    <link data-require="font-awesome@*" data-semver="4.0.3" rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" />
+    <script data-require="angular.js@*" data-semver="1.3.0-beta.5" src="https://code.angularjs.org/1.3.0-beta.5/angular.js"></script>
+    <script data-require="jquery@*" data-semver="2.0.3" src="http://code.jquery.com/jquery-2.0.3.min.js"></script>
+    <script data-require="bootstrap@*" data-semver="3.1.1" src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="style.css" />
+
+  </head>
+
+  <body ng-app="socialAnalytics">
+    
+    <nav class="navbar navbar-inverse navbar-fixed-top" id="nav" role="navigation">
+      <div class="container">
+        
+        <ul class="nav navbar-nav navbar-right pull-right">
+        	<li><a href="#">Sign In</a></li> 
+        </ul>      
+        	
+      </div>
+    </nav>	
+  
+  
+  	<div class="container-fluid container-full">
+  
+      <div class="row">
+       
+        <div class="col-lg-12 v-center">
+          
+          <div class="text-center header-container">
+  	        <h1>Social Analytics</h1>
+  	        <p class="lead">Track a page's interactions across various social networks.</p>
+  	      </div> 
+          
+          <!-- Pinterest -->
+          <div class="col-lg-4 col-lg-offset-4 col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2 col-xs-12 searchbox-container" ng-controller="PinterestCtrl">
+  	        
+	          <div class="input-group">
+	          	
+			        <span class="input-group-addon">
+				        <i class="fa fa-pinterest" style="font-size:30px;min-width:27px;text-align:center;"></i>
+				      </span>
+
+	          	<input class="form-control input-lg" placeholder="Pinterest Pins" type="text" ng-model="url" ng-keydown="fetch($event)">
+
+	          </div>
+  	        
+  
+  	        <!-- Pinterest Results -->
+  	        <div pinterest-results ng-show="reveal"></div>
+  	        
+  	        <div ng-show="!reveal" class="pull-right">
+  	          <h6>Try <a href="#" ng-click="runExample()">this example</a></h6>
+  	        </div>
+  	        
+  	      </div><!-- /Pinterest -->
+  
+          <!-- Facebook -->
+          <div class="col-lg-4 col-lg-offset-4 col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2 col-xs-12 searchbox-container" ng-controller="FacebookCtrl">
+  	        
+	          <div class="input-group">
+	          	
+			        <span class="input-group-addon">
+				        <i class="fa fa-facebook" style="font-size:30px;min-width:27px;text-align:center;"></i>
+				      </span>
+
+	          	<input class="form-control input-lg" placeholder="Likes, Shares, Comments." type="text" ng-model="url" ng-keydown="fetch($event)">
+
+	          </div>
+  	        
+  
+  	        <!-- FB Results -->
+  	        <div facebook-results ng-show="reveal"></div>
+  	        
+  	        <div ng-show="!reveal" class="pull-right">
+  	          <h6>Try <a href="#" ng-click="runExample()">this example</a></h6>
+  	        </div>
+  			    
+  	      </div><!-- /Facebook -->
+  
+  
+  
+  	      <!-- Twitter -->
+          <div class="col-lg-4 col-lg-offset-4 col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2 col-xs-12 searchbox-container" ng-controller="TwitterCtrl">
+  	        
+	          <div class="input-group">
+	          	
+			        <span class="input-group-addon">
+				        <i class="fa fa-twitter" style="font-size:30px;min-width:27px;text-align:center;"></i>
+				      </span>
+
+	          	<input class="form-control input-lg" placeholder="Twitter Shares" type="text" ng-model="url" ng-keydown="fetch($event)">
+
+	          </div>
+  	        
+  
+  	        <!-- Twitter Results -->
+  	        <div twitter-results ng-show="reveal"></div>
+  	        
+  	        <div ng-show="!reveal" class="pull-right">
+  	          <h6>Try <a href="#" ng-click="runExample()">this example</a></h6>
+  	        </div>
+  	        
+  	      </div><!-- /Twitter -->
+  	      
+  	      
+  	      <!-- Google+ -->
+          <div class="col-lg-4 col-lg-offset-4 col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2 col-xs-12 searchbox-container" ng-controller="GoogleCtrl">
+  	        
+	          <div class="input-group">
+	          	
+			        <span class="input-group-addon">
+				        <i class="fa fa-google-plus" style="font-size:30px;min-width:27px;text-align:center;"></i>
+				      </span>
+
+	          	<input class="form-control input-lg" placeholder="Google +1's" type="text" ng-model="url" ng-keydown="fetch($event)">
+
+	          </div>
+  	        
+  	        <!-- Google Results -->
+  	        <div google-results ng-show="reveal"></div>
+  	        
+  	        <div ng-show="!reveal" class="pull-right">
+  	          <h6>Try <a href="#" ng-click="runExample()">this example</a></h6>
+  	        </div>
+  	        
+  	      </div><!-- /Google+ -->
+  
+  
+        </div>
+        
+      </div> <!-- /row -->
+  
+  	  <div class="row">
+       
+        <div class="col-lg-12 text-center v-center" style="font-size:39pt;">
+          <a href="#"><i class="fa fa-github"></i></a> 
+  
+          <!--<a href="#"><i class="fa fa-google-plus"></i></a> 
+          <a href="#"><i class="fa fa-facebook"></i></a>  
+          <a href="#"><i class="fa fa-twitter"></i></a> 
+          <a href="#"><i class="fa fa-pinterest"></i></a>-->
+        </div>
+      
+      </div>
+  
+  
+  
+  	</div> <!-- /container-full -->
+    
+    
+    <script src="social-analytics.js"></script>
+    <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-49272015-1', 'stattracker.me');
+    ga('send', 'pageview');
+
+  </script>
+    
+  </body>
+</html>
+
+
+
+
+
+
