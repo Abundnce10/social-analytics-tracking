@@ -1,8 +1,8 @@
-# [Social Analytics Tracking](http://stattracker.me/socialanalytics/)
+# Social Analytics Tracking
 
 This is a JSON API that provides insight into how a specific URL performs across a variety of social networks.  Utilizing the [Flask](http://flask.pocoo.org/) microframework and a [Python package](https://pypi.python.org/pypi/socialanalytics) I wrote, I created API endpoints for Facebook, Pinterest, Twitter, and Google+.
 
-I've created a static webpage that uses [Angular.js](https://angularjs.org/) to hit the API and present the results.  It can be found [here](http://stattracker.me/socialanalytics/).
+I've created a static webpage that uses [Angular.js](https://angularjs.org/) to hit the API and present the results.
 
 ## Documentation
 
